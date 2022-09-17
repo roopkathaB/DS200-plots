@@ -1,3 +1,4 @@
+import numpy
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.pylab as pylab
@@ -47,7 +48,32 @@ def scatter(data):
     plt.savefig("scatter.jpg", dpi=300)
     plt.show()
 
+
+def box(data):
+    sikkim_data = data[data["State"] == "Sikkim"]
+    districts = sikkim_data["District"].unique()
+    filtered_data = sikkim_data[["District", "Avg_rainfall"]]
+    x = filtered_data[filtered_data["District"] == "East"]["Avg_rainfall"]
+    plot_data = []
+    for district in districts:
+        plot_data.append(filtered_data[filtered_data["District"] == district]["Avg_rainfall"].to_numpy())
+    numpy.asarray(plot_data)
+    fig, ax = plt.subplots()
+    plt.title("Box Plots - Avg Rainfall Sikkim Districts")
+    plt.xlabel("Districts")
+    plt.ylabel("Average Rainfall")
+    plt.boxplot(plot_data)
+    plt.grid()
+    plt.setp(ax, xticks=[y + 1 for y in range(len(plot_data))],
+             xticklabels=districts)
+    plt.savefig("box.jpg", dpi=300)
+    plt.show()
+
+
+
 if __name__ =="__main__":
     data = pd.read_csv("./data/Employment_Participation_Per_1000_Persons_typewise_1.csv")
+    box_data = pd.read_csv("./data/rainfall.csv")
     # scatter(data)
-    line(data)
+    # line(data)
+    box(box_data)
